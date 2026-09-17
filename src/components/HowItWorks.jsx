@@ -6,13 +6,13 @@ const steps = [
   },
   {
     n: '02',
-    title: 'Pick a pickup slot',
-    body: 'Choose a 2-hour window that works for you, today or later this week.',
+    title: 'Pick a slot, we notify collectors nearby',
+    body: 'Choose a 2-hour window. Your request goes out to verified collectors working in your area, and the first to accept is assigned to you.',
   },
   {
     n: '03',
     title: 'Get weighed and paid',
-    body: 'Our collector weighs it on a digital scale in front of you and pays on the spot.',
+    body: 'Your assigned collector weighs it on a digital scale in front of you and pays on the spot.',
   },
 ]
 

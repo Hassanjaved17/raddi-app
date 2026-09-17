@@ -1,7 +1,16 @@
 import { useState, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import { HiOutlineLocationMarker, HiOutlinePhone, HiOutlineCalendar } from 'react-icons/hi'
+import {
+  HiOutlineLocationMarker,
+  HiOutlinePhone,
+  HiOutlineCalendar,
+  HiOutlineStar,
+  HiOutlineTruck,
+  HiOutlineClock,
+} from 'react-icons/hi'
 import { categories, timeSlots } from '../data/categories'
+import { matchCollector } from '../data/collectors'
 
 export default function BookingForm() {
   const [selected, setSelected] = useState('paper')
@@ -9,7 +18,8 @@ export default function BookingForm() {
   const [slot, setSlot] = useState(timeSlots[0])
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [matching, setMatching] = useState(false)
+  const [collector, setCollector] = useState(null)
 
   const category = categories.find((c) => c.id === selected)
   const estimate = useMemo(() => {
@@ -23,8 +33,20 @@ export default function BookingForm() {
       toast.error('Add your address and phone number to continue')
       return
     }
-    setSubmitted(true)
-    toast.success('Pickup scheduled — collector will confirm on WhatsApp')
+    // Stands in for: POST /bookings -> backend notifies collectors whose
+    // service area covers this address -> first to accept gets assigned.
+    setMatching(true)
+    setTimeout(() => {
+      setCollector(matchCollector(address))
+      setMatching(false)
+      toast.success('Collector assigned — you will get a WhatsApp confirmation')
+    }, 1600)
+  }
+
+  function reset() {
+    setCollector(null)
+    setAddress('')
+    setPhone('')
   }
 
   return (
@@ -35,25 +57,82 @@ export default function BookingForm() {
           Takes about two minutes. No account needed.
         </p>
 
-        {submitted ? (
-          <div className="mt-10 rounded-2xl border border-leaf/30 bg-paper p-8">
-            <h3 className="font-display text-2xl text-leaf-deep">
-              You're booked, {address ? 'thanks!' : ''}
+        {matching ? (
+          <div className="mt-10 rounded-2xl border border-ink/10 bg-paper p-10 text-center">
+            <div className="relative mx-auto h-16 w-16">
+              <span className="absolute inset-0 animate-ping rounded-full bg-leaf/25" />
+              <span className="absolute inset-3 rounded-full bg-leaf/20" />
+              <HiOutlineTruck className="absolute inset-0 m-auto text-2xl text-leaf-deep" />
+            </div>
+            <p className="mt-6 font-display text-xl text-ink">
+              Finding your nearest collector…
+            </p>
+            <p className="mt-2 text-[15px] text-ink-soft">
+              Notifying verified collectors working near {address.split(',')[0] || 'your area'}
+            </p>
+          </div>
+        ) : collector ? (
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="mt-10 rounded-2xl border border-leaf/30 bg-paper p-8"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full bg-leaf/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-leaf-deep">
+              <span className="h-1.5 w-1.5 rounded-full bg-leaf" />
+              Collector assigned
+            </span>
+
+            <h3 className="mt-4 font-display text-2xl text-leaf-deep">
+              {collector.name} is picking up your raddi
             </h3>
-            <p className="mt-3 text-ink-soft">
-              A Raddi collector will arrive during{' '}
-              <span className="font-medium text-ink">{slot}</span> to pick up your{' '}
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl bg-paper-dim px-4 py-3">
+                <span className="flex items-center gap-1.5 text-xs text-ink-soft">
+                  <HiOutlineStar className="text-brass-deep" /> Rating
+                </span>
+                <p className="mt-1 font-display text-lg text-ink">
+                  {collector.rating}
+                  <span className="ml-1 text-xs font-normal text-ink-soft">
+                    · {collector.pickups} pickups
+                  </span>
+                </p>
+              </div>
+              <div className="rounded-xl bg-paper-dim px-4 py-3">
+                <span className="flex items-center gap-1.5 text-xs text-ink-soft">
+                  <HiOutlineClock className="text-brass-deep" /> Arriving in
+                </span>
+                <p className="mt-1 font-display text-lg text-ink">
+                  ~{collector.etaMins} mins
+                </p>
+              </div>
+              <div className="rounded-xl bg-paper-dim px-4 py-3">
+                <span className="flex items-center gap-1.5 text-xs text-ink-soft">
+                  <HiOutlineTruck className="text-brass-deep" /> Vehicle
+                </span>
+                <p className="mt-1 text-[15px] font-medium text-ink">
+                  {collector.vehicle}
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-5 text-[15px] leading-relaxed text-ink-soft">
+              Covering <span className="font-medium text-ink">{collector.area}</span>. Arriving
+              during <span className="font-medium text-ink">{slot}</span> for your{' '}
               <span className="font-medium text-ink">{category?.label.toLowerCase()}</span>.
               Estimated payout:{' '}
-              <span className="font-display text-lg text-leaf-deep">Rs {estimate}</span>.
+              <span className="font-display text-lg text-leaf-deep">Rs {estimate}</span>, paid
+              after a digital weigh-in in front of you.
             </p>
+
             <button
-              onClick={() => setSubmitted(false)}
+              onClick={reset}
               className="mt-6 text-sm font-semibold text-ink-soft underline underline-offset-4 hover:text-ink"
             >
               Schedule another pickup
             </button>
-          </div>
+          </motion.div>
         ) : (
           <form
             onSubmit={handleSubmit}

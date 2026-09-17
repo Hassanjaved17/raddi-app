@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion'
+
 const rows = [
   {
     label: 'Price',
@@ -40,8 +42,12 @@ export default function Comparison() {
           <div className="px-5 py-4 font-display text-lg text-brass">Raddi</div>
         </div>
         {rows.map((row, i) => (
-          <div
+          <motion.div
             key={row.label}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.45, ease: 'easeOut', delay: i * 0.12 }}
             className={`grid grid-cols-3 ${i % 2 === 0 ? 'bg-paper' : 'bg-paper-dim'}`}
           >
             <div className="px-5 py-5 text-sm font-semibold text-ink-soft">
@@ -53,7 +59,7 @@ export default function Comparison() {
             <div className="px-5 py-5 text-[15px] font-medium leading-snug text-ink">
               {row.raddi}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
