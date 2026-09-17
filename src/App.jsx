@@ -9,6 +9,7 @@ import HowItWorks from './components/HowItWorks'
 import Pricing from './components/Pricing'
 import BookingForm from './components/BookingForm'
 import Footer from './components/Footer'
+import RateTicker from './components/Rateticker'
 
 export default function App() {
   const [loading, setLoading] = useState(true)
@@ -32,6 +33,7 @@ export default function App() {
       >
         <Navbar />
         <Hero />
+        <RateTicker />
         <Comparison />
         <HowItWorks />
         <Pricing />

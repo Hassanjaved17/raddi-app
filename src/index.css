@@ -30,3 +30,13 @@ body {
   background-color: var(--color-brass);
   color: var(--color-ink);
 }
+
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

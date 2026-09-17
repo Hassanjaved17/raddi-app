@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion'  
 import { categories } from '../data/categories'
+import HeroVisual from './Herovisual'
 
 const tickerItems = categories.slice(0, 5)
 
@@ -36,13 +37,16 @@ export default function Hero() {
           </div>
         </div>
 
-        <motion.div
+      {/* <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="rounded-2xl border border-ink/10 bg-ink text-paper shadow-[0_20px_60px_-25px_rgba(22,35,28,0.5)]"
-        >
-          <div className="flex items-center justify-between border-b border-paper/15 px-6 py-4">
+        >  */}
+        <HeroVisual />
+  {/* </motion.div>  */}
+   
+          {/* <div className="flex items-center justify-between border-b border-paper/15 px-6 py-4">
             <span className="font-display text-lg">Today's rates</span>
             <span className="flex items-center gap-1.5 text-xs text-brass">
               <span className="h-1.5 w-1.5 rounded-full bg-brass" />
@@ -67,8 +71,8 @@ export default function Hero() {
           </ul>
           <div className="px-6 py-4 text-xs text-paper/50">
             Updated daily based on Karachi scrap market rates
-          </div>
-        </motion.div>
+          </div> */}
+       
       </div>
     </section>
   )
