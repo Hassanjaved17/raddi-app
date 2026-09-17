@@ -60,7 +60,7 @@ export default function Footer() {
           <p>
             Designed &amp; developed by{' '}
             <a
-              href="https://hassanjaved.netlify.app/"
+              href="https://hassanjaveds.netlify.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-paper underline decoration-brass decoration-2 underline-offset-4 hover:text-brass"
