@@ -9,7 +9,7 @@ import HowItWorks from './components/HowItWorks'
 import Pricing from './components/Pricing'
 import BookingForm from './components/BookingForm'
 import Footer from './components/Footer'
-import RateTicker from './components/Rateticker'
+import RateTicker from './components/RateTicker'
 
 export default function App() {
   const [loading, setLoading] = useState(true)
